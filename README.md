@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-5.0+-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary-blue.svg?style=for-the-badge)](#)
 
 **CivicFlow** is an enterprise-grade, full-lifecycle Smart Municipal Grievance Redressal and Resolution Management Platform. Designed for modern municipal corporations and city governance authorities, it digitizes public service delivery by bridging citizens, field crews, departmental engineers, and city commissioners into a unified, transparent operational workflow.
 
