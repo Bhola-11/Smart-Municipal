@@ -57,3 +57,4 @@ All pull requests and features:
 - [PR #53](.github/pull_requests/PR_053.md): feat(attachments): implement download_attachment_view with access checks
 - [PR #54](.github/pull_requests/PR_054.md): feat(communications): define MessageType and ComplaintMessage model
 - [PR #55](.github/pull_requests/PR_055.md): feat(communications): implement post_message_view with internal notes
+- [PR #56](.github/pull_requests/PR_056.md): feat(feedback): define SatisfactionLevel choices and Feedback model
