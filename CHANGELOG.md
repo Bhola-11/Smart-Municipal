@@ -14,3 +14,4 @@ All pull requests and features:
 - [PR #10](.github/pull_requests/PR_010.md): feat(accounts): implement citizen registration and authentication forms
 - [PR #11](.github/pull_requests/PR_011.md): feat(accounts): build authentication and profile controller views
 - [PR #12](.github/pull_requests/PR_012.md): feat(accounts): configure accounts URL routing and namespaces
+- [PR #13](.github/pull_requests/PR_013.md): feat(departments): implement Department model with SLA baselines
