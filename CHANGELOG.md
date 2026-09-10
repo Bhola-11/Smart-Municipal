@@ -51,3 +51,4 @@ All pull requests and features:
 - [PR #47](.github/pull_requests/PR_047.md): feat(escalations): define EscalationReason choices and Escalation model
 - [PR #48](.github/pull_requests/PR_048.md): feat(escalations): build trigger_escalation multi-tier service
 - [PR #49](.github/pull_requests/PR_049.md): feat(escalations): implement resolve_escalation management action
+- [PR #50](.github/pull_requests/PR_050.md): feat(escalations): build escalations queue view and manual trigger modal
