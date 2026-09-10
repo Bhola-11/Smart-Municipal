@@ -75,3 +75,4 @@ All pull requests and features:
 - [PR #71](.github/pull_requests/PR_071.md): feat(analytics): build get_category_breakdown and ward density metrics
 - [PR #72](.github/pull_requests/PR_072.md): feat(analytics): build executive analytics overview dashboard
 - [PR #73](.github/pull_requests/PR_073.md): feat(reports): implement export_complaints_csv data streaming
+- [PR #74](.github/pull_requests/PR_074.md): feat(reports): implement printable_executive_report audit view
