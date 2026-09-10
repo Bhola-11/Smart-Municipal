@@ -25,3 +25,4 @@ All pull requests and features:
 - [PR #21](.github/pull_requests/PR_021.md): feat(citizens): implement resident verification submission view
 - [PR #22](.github/pull_requests/PR_022.md): feat(complaints): define ComplaintPriority, Severity, and Status choices
 - [PR #23](.github/pull_requests/PR_023.md): feat(complaints): implement Category and SubCategory models
+- [PR #24](.github/pull_requests/PR_024.md): feat(complaints): build core Complaint docket entity
