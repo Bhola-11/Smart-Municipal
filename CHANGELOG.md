@@ -55,3 +55,4 @@ All pull requests and features:
 - [PR #51](.github/pull_requests/PR_051.md): feat(attachments): define AttachmentStage choices and Attachment model
 - [PR #52](.github/pull_requests/PR_052.md): feat(attachments): build upload validation for file size and extensions
 - [PR #53](.github/pull_requests/PR_053.md): feat(attachments): implement download_attachment_view with access checks
+- [PR #54](.github/pull_requests/PR_054.md): feat(communications): define MessageType and ComplaintMessage model
