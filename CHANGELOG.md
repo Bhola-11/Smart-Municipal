@@ -44,3 +44,4 @@ All pull requests and features:
 - [PR #40](.github/pull_requests/PR_040.md): feat(assignments): create manager assignment modal and workload monitor
 - [PR #41](.github/pull_requests/PR_041.md): feat(sla): implement SLAPolicy model with target resolution hours
 - [PR #42](.github/pull_requests/PR_042.md): feat(sla): implement SLALog tracking model with deadline clocks
+- [PR #43](.github/pull_requests/PR_043.md): feat(sla): build find_matching_sla_policy hierarchical resolver
