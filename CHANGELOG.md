@@ -13,3 +13,4 @@ All pull requests and features:
 - [PR #9](.github/pull_requests/PR_009.md): feat(accounts): create role-based access control decorators and mixins
 - [PR #10](.github/pull_requests/PR_010.md): feat(accounts): implement citizen registration and authentication forms
 - [PR #11](.github/pull_requests/PR_011.md): feat(accounts): build authentication and profile controller views
+- [PR #12](.github/pull_requests/PR_012.md): feat(accounts): configure accounts URL routing and namespaces
