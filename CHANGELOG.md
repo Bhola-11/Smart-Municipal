@@ -36,3 +36,4 @@ All pull requests and features:
 - [PR #32](.github/pull_requests/PR_032.md): feat(workflow): create WorkflowTransition immutable history model
 - [PR #33](.github/pull_requests/PR_033.md): feat(workflow): implement can_transition role clearance validator
 - [PR #34](.github/pull_requests/PR_034.md): feat(workflow): build execute_transition lifecycle execution engine
+- [PR #35](.github/pull_requests/PR_035.md): feat(workflow): create transition status POST action view
