@@ -42,3 +42,4 @@ All pull requests and features:
 - [PR #38](.github/pull_requests/PR_038.md): feat(assignments): implement accept and reject work order handlers
 - [PR #39](.github/pull_requests/PR_039.md): feat(assignments): build get_staff_workload_stats balancer service
 - [PR #40](.github/pull_requests/PR_040.md): feat(assignments): create manager assignment modal and workload monitor
+- [PR #41](.github/pull_requests/PR_041.md): feat(sla): implement SLAPolicy model with target resolution hours
