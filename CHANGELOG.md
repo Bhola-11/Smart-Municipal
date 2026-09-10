@@ -70,3 +70,4 @@ All pull requests and features:
 - [PR #66](.github/pull_requests/PR_066.md): feat(audit): create AuditLogMiddleware for client IP extraction
 - [PR #67](.github/pull_requests/PR_067.md): feat(audit): implement record_audit_log utility service
 - [PR #68](.github/pull_requests/PR_068.md): feat(audit): build filterable audit ledger viewer for administrators
+- [PR #69](.github/pull_requests/PR_069.md): feat(analytics): implement get_city_wide_metrics aggregation service
