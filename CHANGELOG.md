@@ -40,3 +40,4 @@ All pull requests and features:
 - [PR #36](.github/pull_requests/PR_036.md): feat(assignments): create Assignment and AssignmentStatus models
 - [PR #37](.github/pull_requests/PR_037.md): feat(assignments): implement assign_staff_to_complaint delegation service
 - [PR #38](.github/pull_requests/PR_038.md): feat(assignments): implement accept and reject work order handlers
+- [PR #39](.github/pull_requests/PR_039.md): feat(assignments): build get_staff_workload_stats balancer service
