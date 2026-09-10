@@ -79,3 +79,4 @@ All pull requests and features:
 - [PR #75](.github/pull_requests/PR_075.md): feat(reports): build centralized municipal report center view
 - [PR #76](.github/pull_requests/PR_076.md): feat(dashboard): implement unified role-based index routing
 - [PR #77](.github/pull_requests/PR_077.md): feat(dashboard): build Citizen dashboard with quick stats and alerts
+- [PR #78](.github/pull_requests/PR_078.md): feat(dashboard): build Staff operations workspace with pending queue
