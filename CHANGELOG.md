@@ -81,3 +81,4 @@ All pull requests and features:
 - [PR #77](.github/pull_requests/PR_077.md): feat(dashboard): build Citizen dashboard with quick stats and alerts
 - [PR #78](.github/pull_requests/PR_078.md): feat(dashboard): build Staff operations workspace with pending queue
 - [PR #79](.github/pull_requests/PR_079.md): feat(dashboard): build Manager console with unassigned dockets
+- [PR #80](.github/pull_requests/PR_080.md): feat(dashboard): build System Admin portal with directory shortcuts
