@@ -95,3 +95,4 @@ All pull requests and features:
 - [PR #91](.github/pull_requests/PR_091.md): feat(ui): create comprehensive complaint dossier detail template
 - [PR #92](.github/pull_requests/PR_092.md): feat(ui): build work order assignment and escalation dialog templates
 - [PR #93](.github/pull_requests/PR_093.md): feat(ui): build citizen resolution verification and CSAT review form
+- [PR #94](.github/pull_requests/PR_094.md): feat(ui): create resident verification upload template
