@@ -76,3 +76,4 @@ All pull requests and features:
 - [PR #72](.github/pull_requests/PR_072.md): feat(analytics): build executive analytics overview dashboard
 - [PR #73](.github/pull_requests/PR_073.md): feat(reports): implement export_complaints_csv data streaming
 - [PR #74](.github/pull_requests/PR_074.md): feat(reports): implement printable_executive_report audit view
+- [PR #75](.github/pull_requests/PR_075.md): feat(reports): build centralized municipal report center view
