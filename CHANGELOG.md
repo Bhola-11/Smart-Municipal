@@ -29,3 +29,4 @@ All pull requests and features:
 - [PR #25](.github/pull_requests/PR_025.md): feat(complaints): implement citizen complaint registration form
 - [PR #26](.github/pull_requests/PR_026.md): feat(complaints): build multi-parameter search and filter form
 - [PR #27](.github/pull_requests/PR_027.md): feat(complaints): implement complaint creation and SLA initializer
+- [PR #28](.github/pull_requests/PR_028.md): feat(complaints): build comprehensive complaint dossier detail view
