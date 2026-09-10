@@ -71,3 +71,4 @@ All pull requests and features:
 - [PR #67](.github/pull_requests/PR_067.md): feat(audit): implement record_audit_log utility service
 - [PR #68](.github/pull_requests/PR_068.md): feat(audit): build filterable audit ledger viewer for administrators
 - [PR #69](.github/pull_requests/PR_069.md): feat(analytics): implement get_city_wide_metrics aggregation service
+- [PR #70](.github/pull_requests/PR_070.md): feat(analytics): implement get_department_performance ranking service
