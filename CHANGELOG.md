@@ -11,3 +11,4 @@ All pull requests and features:
 - [PR #7](.github/pull_requests/PR_007.md): feat(core): implement custom templatetags and badge filters
 - [PR #8](.github/pull_requests/PR_008.md): feat(accounts): define UserRole enum and custom User model
 - [PR #9](.github/pull_requests/PR_009.md): feat(accounts): create role-based access control decorators and mixins
+- [PR #10](.github/pull_requests/PR_010.md): feat(accounts): implement citizen registration and authentication forms
