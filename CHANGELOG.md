@@ -97,3 +97,4 @@ All pull requests and features:
 - [PR #93](.github/pull_requests/PR_093.md): feat(ui): build citizen resolution verification and CSAT review form
 - [PR #94](.github/pull_requests/PR_094.md): feat(ui): create resident verification upload template
 - [PR #95](.github/pull_requests/PR_095.md): feat(ui): create public complaint tracking search template
+- [PR #96](.github/pull_requests/PR_096.md): feat(ui): build staff and personnel management templates
