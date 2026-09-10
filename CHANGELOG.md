@@ -32,3 +32,4 @@ All pull requests and features:
 - [PR #28](.github/pull_requests/PR_028.md): feat(complaints): build comprehensive complaint dossier detail view
 - [PR #29](.github/pull_requests/PR_029.md): feat(complaints): create public tracking endpoint by reference number
 - [PR #30](.github/pull_requests/PR_030.md): feat(complaints): add dynamic subcategories JSON endpoint
+- [PR #31](.github/pull_requests/PR_031.md): feat(workflow): define ALLOWED_TRANSITIONS state machine matrix
