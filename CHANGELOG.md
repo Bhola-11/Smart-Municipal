@@ -66,3 +66,4 @@ All pull requests and features:
 - [PR #62](.github/pull_requests/PR_062.md): feat(notifications): implement create_notification and status triggers
 - [PR #63](.github/pull_requests/PR_063.md): feat(notifications): add notification_badge context processor
 - [PR #64](.github/pull_requests/PR_064.md): feat(notifications): build notification inbox and mark-as-read views
+- [PR #65](.github/pull_requests/PR_065.md): feat(audit): implement immutable AuditLog compliance model
