@@ -99,3 +99,4 @@ All pull requests and features:
 - [PR #95](.github/pull_requests/PR_095.md): feat(ui): create public complaint tracking search template
 - [PR #96](.github/pull_requests/PR_096.md): feat(ui): build staff and personnel management templates
 - [PR #97](.github/pull_requests/PR_097.md): feat(ui): build department and ward directory templates
+- [PR #98](.github/pull_requests/PR_098.md): feat(ui): build SLA policy configuration templates
