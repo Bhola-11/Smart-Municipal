@@ -56,6 +56,15 @@ INSTALLED_APPS = [
     'apps.analytics.apps.AnalyticsConfig',
     'apps.reports.apps.ReportsConfig',
     'apps.dashboard.apps.DashboardConfig',
+
+    # CivicFlow Enterprise Smart City Suite
+    'apps.iot_telemetry.apps.IotTelemetryConfig',
+    'apps.gis_engine.apps.GisEngineConfig',
+    'apps.contractors.apps.ContractorsConfig',
+    'apps.finance_billing.apps.FinanceBillingConfig',
+    'apps.ml_engine.apps.MlEngineConfig',
+    'apps.api_gateway.apps.ApiGatewayConfig',
+    'apps.assets_registry.apps.AssetsRegistryConfig',
 ]
 
 MIDDLEWARE = [
