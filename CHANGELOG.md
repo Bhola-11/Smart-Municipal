@@ -85,3 +85,4 @@ All pull requests and features:
 - [PR #81](.github/pull_requests/PR_081.md): feat(dashboard): build Public Transparency open data portal
 - [PR #82](.github/pull_requests/PR_082.md): feat(ui): create base.html master layout with responsive sidebar
 - [PR #83](.github/pull_requests/PR_083.md): feat(ui): build top navigation bar with unread notifications counter
+- [PR #84](.github/pull_requests/PR_084.md): feat(ui): create civic design system CSS with color palette and pills
