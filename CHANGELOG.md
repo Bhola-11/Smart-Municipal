@@ -59,3 +59,4 @@ All pull requests and features:
 - [PR #55](.github/pull_requests/PR_055.md): feat(communications): implement post_message_view with internal notes
 - [PR #56](.github/pull_requests/PR_056.md): feat(feedback): define SatisfactionLevel choices and Feedback model
 - [PR #57](.github/pull_requests/PR_057.md): feat(feedback): implement submit_feedback_view with auto-close logic
+- [PR #58](.github/pull_requests/PR_058.md): feat(feedback): add citizen rejection handling and auto-reopening trigger
