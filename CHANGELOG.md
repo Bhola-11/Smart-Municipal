@@ -100,3 +100,4 @@ All pull requests and features:
 - [PR #96](.github/pull_requests/PR_096.md): feat(ui): build staff and personnel management templates
 - [PR #97](.github/pull_requests/PR_097.md): feat(ui): build department and ward directory templates
 - [PR #98](.github/pull_requests/PR_098.md): feat(ui): build SLA policy configuration templates
+- [PR #99](.github/pull_requests/PR_099.md): feat(ui): build print-ready certified executive audit template
