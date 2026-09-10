@@ -9,3 +9,4 @@ All pull requests and features:
 - [PR #5](.github/pull_requests/PR_005.md): feat(core): configure structured application logging and formatters
 - [PR #6](.github/pull_requests/PR_006.md): feat(core): implement custom 400, 403, 404, 500 error handlers
 - [PR #7](.github/pull_requests/PR_007.md): feat(core): implement custom templatetags and badge filters
+- [PR #8](.github/pull_requests/PR_008.md): feat(accounts): define UserRole enum and custom User model
