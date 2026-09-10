@@ -46,3 +46,4 @@ All pull requests and features:
 - [PR #42](.github/pull_requests/PR_042.md): feat(sla): implement SLALog tracking model with deadline clocks
 - [PR #43](.github/pull_requests/PR_043.md): feat(sla): build find_matching_sla_policy hierarchical resolver
 - [PR #44](.github/pull_requests/PR_044.md): feat(sla): implement initialize_complaint_sla service
+- [PR #45](.github/pull_requests/PR_045.md): feat(sla): implement update_sla_status with Due-Soon and breach logic
