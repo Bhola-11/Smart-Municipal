@@ -31,3 +31,4 @@ All pull requests and features:
 - [PR #27](.github/pull_requests/PR_027.md): feat(complaints): implement complaint creation and SLA initializer
 - [PR #28](.github/pull_requests/PR_028.md): feat(complaints): build comprehensive complaint dossier detail view
 - [PR #29](.github/pull_requests/PR_029.md): feat(complaints): create public tracking endpoint by reference number
+- [PR #30](.github/pull_requests/PR_030.md): feat(complaints): add dynamic subcategories JSON endpoint
