@@ -19,3 +19,4 @@ All pull requests and features:
 - [PR #15](.github/pull_requests/PR_015.md): feat(departments): add department administration and edit forms
 - [PR #16](.github/pull_requests/PR_016.md): feat(wards): implement Zone and Ward municipal models
 - [PR #17](.github/pull_requests/PR_017.md): feat(wards): create Area locality model with GPS coordinate fields
+- [PR #18](.github/pull_requests/PR_018.md): feat(wards): build ward directory and geographic detail views
