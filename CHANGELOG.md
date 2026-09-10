@@ -83,3 +83,4 @@ All pull requests and features:
 - [PR #79](.github/pull_requests/PR_079.md): feat(dashboard): build Manager console with unassigned dockets
 - [PR #80](.github/pull_requests/PR_080.md): feat(dashboard): build System Admin portal with directory shortcuts
 - [PR #81](.github/pull_requests/PR_081.md): feat(dashboard): build Public Transparency open data portal
+- [PR #82](.github/pull_requests/PR_082.md): feat(ui): create base.html master layout with responsive sidebar
