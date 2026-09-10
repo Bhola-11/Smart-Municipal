@@ -16,3 +16,4 @@ All pull requests and features:
 - [PR #12](.github/pull_requests/PR_012.md): feat(accounts): configure accounts URL routing and namespaces
 - [PR #13](.github/pull_requests/PR_013.md): feat(departments): implement Department model with SLA baselines
 - [PR #14](.github/pull_requests/PR_014.md): feat(departments): build department directory and detail views
+- [PR #15](.github/pull_requests/PR_015.md): feat(departments): add department administration and edit forms
