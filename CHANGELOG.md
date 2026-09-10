@@ -64,3 +64,4 @@ All pull requests and features:
 - [PR #60](.github/pull_requests/PR_060.md): feat(feedback): build CSAT management analytics dashboard
 - [PR #61](.github/pull_requests/PR_061.md): feat(notifications): define NotificationPriority and Notification model
 - [PR #62](.github/pull_requests/PR_062.md): feat(notifications): implement create_notification and status triggers
+- [PR #63](.github/pull_requests/PR_063.md): feat(notifications): add notification_badge context processor
