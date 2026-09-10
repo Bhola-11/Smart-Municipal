@@ -27,3 +27,4 @@ All pull requests and features:
 - [PR #23](.github/pull_requests/PR_023.md): feat(complaints): implement Category and SubCategory models
 - [PR #24](.github/pull_requests/PR_024.md): feat(complaints): build core Complaint docket entity
 - [PR #25](.github/pull_requests/PR_025.md): feat(complaints): implement citizen complaint registration form
+- [PR #26](.github/pull_requests/PR_026.md): feat(complaints): build multi-parameter search and filter form
