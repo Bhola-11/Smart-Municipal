@@ -49,3 +49,4 @@ All pull requests and features:
 - [PR #45](.github/pull_requests/PR_045.md): feat(sla): implement update_sla_status with Due-Soon and breach logic
 - [PR #46](.github/pull_requests/PR_046.md): feat(sla): create SLA policy management views and forms
 - [PR #47](.github/pull_requests/PR_047.md): feat(escalations): define EscalationReason choices and Escalation model
+- [PR #48](.github/pull_requests/PR_048.md): feat(escalations): build trigger_escalation multi-tier service
