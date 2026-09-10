@@ -60,3 +60,4 @@ All pull requests and features:
 - [PR #56](.github/pull_requests/PR_056.md): feat(feedback): define SatisfactionLevel choices and Feedback model
 - [PR #57](.github/pull_requests/PR_057.md): feat(feedback): implement submit_feedback_view with auto-close logic
 - [PR #58](.github/pull_requests/PR_058.md): feat(feedback): add citizen rejection handling and auto-reopening trigger
+- [PR #59](.github/pull_requests/PR_059.md): feat(feedback): add multi-reopen escalation trigger logic
