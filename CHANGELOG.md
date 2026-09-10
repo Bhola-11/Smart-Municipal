@@ -53,3 +53,4 @@ All pull requests and features:
 - [PR #49](.github/pull_requests/PR_049.md): feat(escalations): implement resolve_escalation management action
 - [PR #50](.github/pull_requests/PR_050.md): feat(escalations): build escalations queue view and manual trigger modal
 - [PR #51](.github/pull_requests/PR_051.md): feat(attachments): define AttachmentStage choices and Attachment model
+- [PR #52](.github/pull_requests/PR_052.md): feat(attachments): build upload validation for file size and extensions
