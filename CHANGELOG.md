@@ -104,3 +104,4 @@ All pull requests and features:
 - [PR #100](.github/pull_requests/PR_100.md): feat(admin): register all domain models into Django administrative site
 - [PR #101](.github/pull_requests/PR_101.md): feat(commands): create seed_municipal_data management command
 - [PR #102](.github/pull_requests/PR_102.md): feat(commands): create check_sla_breaches automated audit command
+- [PR #103](.github/pull_requests/PR_103.md): feat(commands): create process_escalations inactivity command
