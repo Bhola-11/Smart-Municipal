@@ -22,3 +22,4 @@ All pull requests and features:
 - [PR #18](.github/pull_requests/PR_018.md): feat(wards): build ward directory and geographic detail views
 - [PR #19](.github/pull_requests/PR_019.md): feat(wards): create dynamic dependent areas JSON API
 - [PR #20](.github/pull_requests/PR_020.md): feat(citizens): create CitizenVerification model for resident proof
+- [PR #21](.github/pull_requests/PR_021.md): feat(citizens): implement resident verification submission view
