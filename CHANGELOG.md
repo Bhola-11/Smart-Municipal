@@ -37,3 +37,4 @@ All pull requests and features:
 - [PR #33](.github/pull_requests/PR_033.md): feat(workflow): implement can_transition role clearance validator
 - [PR #34](.github/pull_requests/PR_034.md): feat(workflow): build execute_transition lifecycle execution engine
 - [PR #35](.github/pull_requests/PR_035.md): feat(workflow): create transition status POST action view
+- [PR #36](.github/pull_requests/PR_036.md): feat(assignments): create Assignment and AssignmentStatus models
