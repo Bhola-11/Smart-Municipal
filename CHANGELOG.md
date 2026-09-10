@@ -89,3 +89,4 @@ All pull requests and features:
 - [PR #85](.github/pull_requests/PR_085.md): feat(ui): create interactive JavaScript for cascading dropdowns
 - [PR #86](.github/pull_requests/PR_086.md): feat(ui): add accessible error pages for 400, 403, 404, and 500
 - [PR #87](.github/pull_requests/PR_087.md): feat(ui): create authentication templates for login and registration
+- [PR #88](.github/pull_requests/PR_088.md): feat(ui): create citizen and officer profile management templates
