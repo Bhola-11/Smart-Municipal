@@ -107,3 +107,4 @@ All pull requests and features:
 - [PR #103](.github/pull_requests/PR_103.md): feat(commands): create process_escalations inactivity command
 - [PR #104](.github/pull_requests/PR_104.md): feat(commands): create generate_civic_reports executive summary command
 - [PR #105](.github/pull_requests/PR_105.md): test: add unit and integration test suite across all municipal modules
+- [PR #106](.github/pull_requests/PR_106.md): docs: compile comprehensive README with architecture and setup guide
