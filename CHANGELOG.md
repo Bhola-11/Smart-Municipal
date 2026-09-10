@@ -98,3 +98,4 @@ All pull requests and features:
 - [PR #94](.github/pull_requests/PR_094.md): feat(ui): create resident verification upload template
 - [PR #95](.github/pull_requests/PR_095.md): feat(ui): create public complaint tracking search template
 - [PR #96](.github/pull_requests/PR_096.md): feat(ui): build staff and personnel management templates
+- [PR #97](.github/pull_requests/PR_097.md): feat(ui): build department and ward directory templates
