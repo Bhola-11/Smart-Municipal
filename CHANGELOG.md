@@ -92,3 +92,4 @@ All pull requests and features:
 - [PR #88](.github/pull_requests/PR_088.md): feat(ui): create citizen and officer profile management templates
 - [PR #89](.github/pull_requests/PR_089.md): feat(ui): create complaint list template with advanced filter bar
 - [PR #90](.github/pull_requests/PR_090.md): feat(ui): create complaint submission form template with file upload
+- [PR #91](.github/pull_requests/PR_091.md): feat(ui): create comprehensive complaint dossier detail template
