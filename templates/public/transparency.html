@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: white; border-radius: 0.75rem; padding: 3rem 2rem; margin-bottom: 2.5rem; text-align: center;">
+    <h1 style="font-size: 2.25rem; color: white; margin-bottom: 0.75rem;">Metropolis Civic Transparency Portal</h1>
+    <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 650px; margin: 0 auto 1.5rem;">
+        Open municipal governance data tracking civic redressal velocity, SLA compliance, and departmental responsiveness.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'complaints:track' %}" class="btn btn-outline" style="background: white; color: #0f172a; font-weight: 700;">
+            🔍 Track Your Complaint
+        </a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-success">
+            ✍️ Report a Problem
+        </a>
+    </div>
+</div>
+
+<!-- City KPI Cards -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ metrics.total }}</div>
+            <div class="stat-label">Total Dockets Logged</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">🏛️</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #059669;">{{ metrics.resolved|add:metrics.closed }}</div>
+            <div class="stat-label">Resolved & Closed</div>
+        </div>
+        <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">✅</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #0284c7;">{{ metrics.resolution_rate }}%</div>
+            <div class="stat-label">Overall Resolution Rate</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f0f9ff; color: #0284c7;">📊</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #16a34a;">{{ metrics.sla_compliance_rate }}%</div>
+            <div class="stat-label">SLA Compliance Index</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f0fdf4; color: #16a34a;">⏱️</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ metrics.avg_resolution_hours }}h</div>
+            <div class="stat-label">Avg Resolution Velocity</div>
+        </div>
+        <div class="stat-icon" style="background-color: #faf5ff; color: #9333ea;">⚡</div>
+    </div>
+</div>
+
+<!-- Department Performance Table -->
+<div class="content-card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+        <h2 class="card-title">Department Responsiveness Index</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Total Complaints</th>
+                    <th>Resolved Dockets</th>
+                    <th>Active Overdue</th>
+                    <th>Resolution Rate</th>
+                    <th>Performance Tier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dept_performance %}
+                <tr>
+                    <td><strong>{{ d.department.name }} ({{ d.department.code }})</strong></td>
+                    <td>{{ d.total }}</td>
+                    <td><span style="color: #059669; font-weight: 600;">{{ d.resolved }}</span></td>
+                    <td>
+                        {% if d.overdue > 0 %}
+                            <span class="civic-pill bg-rose-100 text-rose-800">{{ d.overdue }} Overdue</span>
+                        {% else %}
+                            <span class="civic-pill bg-emerald-100 text-emerald-800">0 Overdue</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <strong>{{ d.resolution_rate }}%</strong>
+                            <div class="progress-bar-container" style="width: 100px; margin: 0;">
+                                <div class="progress-bar-fill" style="width: {{ d.resolution_rate }}%; background-color: #059669;"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if d.resolution_rate >= 80 %}
+                        <span class="civic-badge bg-emerald-100 text-emerald-800">Top Performing</span>
+                        {% elif d.resolution_rate >= 50 %}
+                        <span class="civic-badge bg-blue-100 text-blue-800">Standard Pace</span>
+                        {% else %}
+                        <span class="civic-badge bg-amber-100 text-amber-800">Intervention Needed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No performance telemetry logged yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Two-Column: Category Breakdown & Ward Density -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <!-- Category breakdown -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Top Civic Grievances by Category</h2>
+        </div>
+        <div class="card-body">
+            {% for cat in category_breakdown %}
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                    <strong>{{ cat.name }}</strong>
+                    <span>{{ cat.count }} complaints</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: {% widthratio cat.count metrics.total 100 %}%; background-color: #2563eb;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Ward Density -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Grievance Volume by Ward</h2>
+        </div>
+        <div class="card-body">
+            {% for w in ward_distribution %}
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem;">
+                <div>
+                    <strong>Ward {{ w.ward_number }}: {{ w.name }}</strong>
+                    <small style="color: var(--text-muted); display: block;">{{ w.zone.name }}</small>
+                </div>
+                <div>
+                    <span class="civic-pill bg-slate-200 text-slate-800">{{ w.count }} issues</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

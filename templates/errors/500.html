@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 4rem auto; text-align: center;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">⚙️</div>
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">500 - System Maintenance & Server Error</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ message|default:"A municipal application service error has occurred. Incident telemetry has been logged for IT engineering." }}</p>
+    <a href="{% url 'dashboard:index' %}" class="btn btn-primary">Return to Homepage</a>
+</div>
+{% endblock %}

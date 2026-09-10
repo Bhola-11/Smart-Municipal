@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Municipal SLA Policies</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Target resolution hours, response deadlines, and breach conditions</p>
+    </div>
+    {% if user.is_admin_user %}
+    <a href="{% url 'sla:create' %}" class="btn btn-primary">+ Create SLA Policy</a>
+    {% endif %}
+</div>
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Policy Identifier</th>
+                    <th>Scope</th>
+                    <th>Priority</th>
+                    <th>Response Target</th>
+                    <th>Resolution Target</th>
+                    <th>Warning Threshold</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in policies %}
+                <tr>
+                    <td><strong>{{ p.name }}</strong></td>
+                    <td>
+                        {% if p.department %}
+                            {{ p.department.name }}
+                        {% elif p.category %}
+                            Category: {{ p.category.name }}
+                        {% else %}
+                            <span class="civic-pill bg-slate-200 text-slate-800">City-Wide Baseline</span>
+                        {% endif %}
+                    </td>
+                    <td>{% if p.priority %}{{ p.priority|priority_badge }}{% else %}All{% endif %}</td>
+                    <td>{{ p.response_time_hours }} hours</td>
+                    <td><strong>{{ p.resolution_time_hours }} hours</strong></td>
+                    <td>{{ p.due_soon_threshold_percent }}% elapsed</td>
+                    <td>
+                        {% if p.is_active %}
+                        <span class="civic-pill bg-emerald-100 text-emerald-800">Active</span>
+                        {% else %}
+                        <span class="civic-pill bg-gray-100 text-gray-800">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        No SLA policies configured.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

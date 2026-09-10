@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Municipal Report Center</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Official compliance disclosures, printable audits, and raw dataset exports</p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{% url 'reports:export_csv' %}" class="btn btn-outline">📥 Export Complaints (CSV)</a>
+        <a href="{% url 'reports:printable' %}" target="_blank" class="btn btn-primary">🖨️ Printable Executive Audit</a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div class="content-card" style="padding: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📑 Executive Grievance Audit</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Formal printable report containing municipal resolution rates, SLA adherence indices, and escalated dockets.
+        </p>
+        <a href="{% url 'reports:printable' %}" target="_blank" class="btn btn-outline btn-sm">Generate Printable Report &rarr;</a>
+    </div>
+
+    <div class="content-card" style="padding: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📊 Raw CSV Data Export</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Full export of all complaint records with categories, timestamps, SLAs, statuses, and coordinates for GIS modeling.
+        </p>
+        <a href="{% url 'reports:export_csv' %}" class="btn btn-outline btn-sm">Download Full CSV &rarr;</a>
+    </div>
+
+    <div class="content-card" style="padding: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">⭐ CSAT & Verification Audit</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Citizen feedback ratings, verification statistics, and service quality remarks by ward.
+        </p>
+        <a href="{% url 'feedback:analytics' %}" class="btn btn-outline btn-sm">View CSAT Analytics &rarr;</a>
+    </div>
+</div>
+{% endblock %}

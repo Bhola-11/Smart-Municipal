@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 1.5rem auto;">
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Municipal Profile Details</h2>
+            <a href="{% url 'accounts:password_change' %}" class="btn btn-outline btn-sm">Change Password</a>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; align-items: center;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        👤
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.2rem;">{{ user.get_full_name|default:user.username }}</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Role: <strong>{{ user.get_role_display }}</strong></p>
+                        {% if user.department %}<p style="font-size: 0.85rem;">Affiliation: <strong>{{ user.department.name }}</strong></p>{% endif %}
+                        {% if user.employee_id %}<p style="font-size: 0.85rem;">Staff ID: <code>{{ user.employee_id }}</code></p>{% endif %}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Primary Mobile</label>
+                        {{ form.phone_number }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Residential Ward</label>
+                    {{ form.ward }}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    {{ form.address }}
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                    Update Profile Details
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

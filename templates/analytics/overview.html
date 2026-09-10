@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Civic Analytics & Operational Intelligence</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Executive grievance resolution statistics, SLA benchmarks, and geographical hot-spots</p>
+    </div>
+    <a href="{% url 'reports:center' %}" class="btn btn-primary">📑 Open Report Center</a>
+</div>
+
+<!-- Key Performance Indicators -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ metrics.total }}</div>
+            <div class="stat-label">Total Volume</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">🏛️</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #059669;">{{ metrics.resolution_rate }}%</div>
+            <div class="stat-label">Resolution Rate</div>
+        </div>
+        <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">📈</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #0284c7;">{{ metrics.sla_compliance_rate }}%</div>
+            <div class="stat-label">SLA Compliance</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f0f9ff; color: #0284c7;">⏱️</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ metrics.avg_resolution_hours }}h</div>
+            <div class="stat-label">Avg Repair Velocity</div>
+        </div>
+        <div class="stat-icon" style="background-color: #faf5ff; color: #9333ea;">⚡</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #dc2626;">{{ metrics.escalated }}</div>
+            <div class="stat-label">System Escalations</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fee2e2; color: #dc2626;">🚨</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <!-- Department Performance Table -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">Department Operational Performance</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="civic-table">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Volume</th>
+                        <th>Resolved</th>
+                        <th>Overdue</th>
+                        <th>Efficiency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in dept_performance %}
+                    <tr>
+                        <td><strong>{{ d.department.name }}</strong></td>
+                        <td>{{ d.total }}</td>
+                        <td><span style="color: #059669; font-weight: 600;">{{ d.resolved }}</span></td>
+                        <td>
+                            {% if d.overdue > 0 %}<span class="civic-pill bg-rose-100 text-rose-800">{{ d.overdue }}</span>{% else %}0{% endif %}
+                        </td>
+                        <td><strong>{{ d.resolution_rate }}%</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Category Distribution -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">Grievances by Category</h3>
+        </div>
+        <div class="card-body">
+            {% for cat in category_breakdown %}
+            <div style="margin-bottom: 0.85rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                    <strong>{{ cat.name }}</strong>
+                    <span style="color: var(--text-muted);">{{ cat.count }}</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: {% widthratio cat.count metrics.total 100 %}%; background-color: #2563eb;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% load static %}
+{% load civic_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title|default:MUNICIPALITY_PORTAL_TITLE }}{% endblock %} | CivicFlow</title>
+    <link rel="stylesheet" href="{% static 'css/civicflow.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        {% if user.is_authenticated %}
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="{% url 'dashboard:index' %}" class="sidebar-brand">
+                    <span style="font-size: 1.5rem;">🏛️</span>
+                    <span>CivicFlow</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-heading">Main Portals</div>
+                <a href="{% url 'dashboard:index' %}" class="nav-item">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'complaints:list' %}" class="nav-item">
+                    <span>📋</span>
+                    <span>Complaints Registry</span>
+                </a>
+                
+                {% if user.is_citizen %}
+                <div class="nav-heading">Citizen Services</div>
+                <a href="{% url 'complaints:create' %}" class="nav-item">
+                    <span>✍️</span>
+                    <span>Report Grievance</span>
+                </a>
+                <a href="{% url 'citizens:verification' %}" class="nav-item">
+                    <span>🪪</span>
+                    <span>Resident Verification</span>
+                </a>
+                {% endif %}
+
+                {% if user.is_staff_member or user.is_manager %}
+                <div class="nav-heading">Municipal Operations</div>
+                {% if user.is_manager %}
+                <a href="{% url 'assignments:workload' %}" class="nav-item">
+                    <span>⚖️</span>
+                    <span>Workload Balancer</span>
+                </a>
+                <a href="{% url 'escalations:list' %}" class="nav-item">
+                    <span>🚨</span>
+                    <span>Escalations Queue</span>
+                </a>
+                <a href="{% url 'feedback:analytics' %}" class="nav-item">
+                    <span>⭐</span>
+                    <span>CSAT Ratings</span>
+                </a>
+                <a href="{% url 'analytics:overview' %}" class="nav-item">
+                    <span>📈</span>
+                    <span>Civic Analytics</span>
+                </a>
+                <a href="{% url 'reports:center' %}" class="nav-item">
+                    <span>📑</span>
+                    <span>Reports & Audits</span>
+                </a>
+                {% endif %}
+                {% endif %}
+
+                {% if user.is_admin_user %}
+                <div class="nav-heading">Administration</div>
+                <a href="{% url 'departments:list' %}" class="nav-item">
+                    <span>🏢</span>
+                    <span>Departments</span>
+                </a>
+                <a href="{% url 'wards:list' %}" class="nav-item">
+                    <span>🗺️</span>
+                    <span>Wards & Areas</span>
+                </a>
+                <a href="{% url 'sla:list' %}" class="nav-item">
+                    <span>⏱️</span>
+                    <span>SLA Policies</span>
+                </a>
+                <a href="{% url 'accounts:staff_list' %}" class="nav-item">
+                    <span>👥</span>
+                    <span>Personnel Directory</span>
+                </a>
+                <a href="{% url 'audit:list' %}" class="nav-item">
+                    <span>🔒</span>
+                    <span>Security Audit Logs</span>
+                </a>
+                {% endif %}
+
+                <div class="nav-heading">Civic Transparency</div>
+                <a href="{% url 'dashboard:transparency' %}" class="nav-item">
+                    <span>🌐</span>
+                    <span>Public Transparency</span>
+                </a>
+                <a href="{% url 'complaints:track' %}" class="nav-item">
+                    <span>🔍</span>
+                    <span>Track Complaint</span>
+                </a>
+            </nav>
+        </aside>
+        {% endif %}
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-title">{{ title|default:MUNICIPALITY_NAME }}</span>
+                </div>
+                <div class="topbar-right">
+                    {% if user.is_authenticated %}
+                    <!-- Notifications Dropdown Trigger -->
+                    <a href="{% url 'notifications:list' %}" class="notif-bell" title="Civic Alerts">
+                        <span style="font-size: 1.25rem;">🔔</span>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notif-counter">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </a>
+
+                    <!-- User Profile & Clearance -->
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.85rem; font-weight: 700;">{{ user.get_full_name|default:user.username }}</div>
+                            <span class="civic-badge {{ user.get_role_badge_class }}">{{ user.get_role_display }}</span>
+                        </div>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-outline btn-sm">Profile</a>
+                        <a href="{% url 'accounts:logout' %}" class="btn btn-danger btn-sm">Logout</a>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'dashboard:transparency' %}" class="btn btn-outline btn-sm">Public Transparency</a>
+                    <a href="{% url 'complaints:track' %}" class="btn btn-outline btn-sm">Track Docket</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">Sign In</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm">Citizen Register</a>
+                    {% endif %}
+                </div>
+            </header>
+
+            <!-- Alerts Banner -->
+            <main class="page-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="civic-alert civic-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+                            <span>{{ message }}</span>
+                            <button type="button" class="alert-close" style="background:none; border:none; cursor:pointer; font-weight:bold;">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Footer -->
+            <footer style="padding: 1rem 1.75rem; border-top: 1px solid var(--border-color); background-color: #ffffff; display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                <div>
+                    <strong>{{ MUNICIPALITY_NAME }}</strong> | {{ MUNICIPALITY_PORTAL_TITLE }}
+                </div>
+                <div>
+                    Toll-Free Helpline: <strong>{{ MUNICIPALITY_HOTLINE }}</strong> | Email: {{ MUNICIPALITY_EMAIL }}
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{% static 'js/civicflow.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

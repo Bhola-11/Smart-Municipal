@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Municipal Wards & Geographic Zones</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Administrative boundaries, councilors, and localities</p>
+    </div>
+    {% if user.is_admin_user %}
+    <a href="{% url 'wards:create' %}" class="btn btn-primary">+ Add New Ward</a>
+    {% endif %}
+</div>
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Ward #</th>
+                    <th>Ward Name</th>
+                    <th>Municipal Zone</th>
+                    <th>Designated Officer</th>
+                    <th>Population</th>
+                    <th>Localities / Areas</th>
+                    <th>Office Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in wards %}
+                <tr>
+                    <td><strong>Ward {{ w.ward_number }}</strong></td>
+                    <td><strong><a href="{% url 'wards:detail' w.pk %}">{{ w.name }}</a></strong></td>
+                    <td>{{ w.zone.name }}</td>
+                    <td>{{ w.ward_officer.get_full_name|default:w.ward_officer.username|default:"Unassigned" }}</td>
+                    <td>{{ w.population|default:"-" }}</td>
+                    <td><span class="civic-pill bg-slate-200 text-slate-800">{{ w.total_areas_count }} areas</span></td>
+                    <td>{{ w.contact_phone|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No wards configured.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

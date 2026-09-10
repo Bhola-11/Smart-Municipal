@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 2rem auto;">
+    <div class="content-card">
+        <div class="card-header" style="text-align: center; justify-content: center; flex-direction: column;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <h2 class="card-title">Track Municipal Complaint Status</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Enter your unique docket tracking number (CF-YYYYMMDD-XXXX)
+            </p>
+        </div>
+        <div class="card-body">
+            <form method="get">
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <input type="text" name="ref" class="form-input" placeholder="e.g. CF-20260910-K8P2" value="{{ ref_number }}" style="font-family: monospace; font-size: 1.1rem; text-transform: uppercase;" required>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.5rem;">Track</button>
+                </div>
+            </form>
+
+            {% if searched %}
+                {% if complaint %}
+                <div style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.25rem; background-color: #fafbfc;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span style="font-family: monospace; font-weight: 700; font-size: 1.1rem;">{{ complaint.complaint_number }}</span>
+                        {{ complaint.status|status_badge }}
+                    </div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">{{ complaint.title }}</h3>
+                    
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        <div>Category: <strong>{{ complaint.category.name }}</strong></div>
+                        <div>Responsible Agency: <strong>{{ complaint.department.name }}</strong></div>
+                        <div>Jurisdiction: <strong>{{ complaint.ward.name }}</strong></div>
+                        <div>Registered On: <strong>{{ complaint.created_at|date:"F d, Y \a\t H:i" }}</strong></div>
+                    </div>
+
+                    {% if complaint.expected_resolution_date %}
+                    <div style="padding: 0.75rem; background-color: #eff6ff; border-radius: 0.375rem; margin-bottom: 1rem; font-size: 0.85rem;">
+                        <span>Target SLA Resolution Date:</span>
+                        <strong>{{ complaint.expected_resolution_date|date:"F d, Y H:i" }}</strong>
+                        {% if complaint.is_overdue %}<span class="civic-pill bg-rose-600 text-white" style="margin-left: 0.5rem;">Overdue</span>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if complaint.resolution_summary %}
+                    <div style="padding: 0.75rem; background-color: #ecfdf5; border-radius: 0.375rem; font-size: 0.85rem; color: #065f46;">
+                        <strong>Resolution Note:</strong> {{ complaint.resolution_summary }}
+                    </div>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                    <div style="margin-top: 1rem; text-align: right;">
+                        <a href="{{ complaint.get_absolute_url }}" class="btn btn-primary btn-sm">Open Full Dossier &rarr;</a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="civic-alert civic-alert-warning" style="text-align: center;">
+                    No complaint docket found with reference number "<strong>{{ ref_number }}</strong>". Please double check your SMS receipt or docket number.
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+            <h1 style="font-size: 1.7rem; font-family: monospace;">{{ complaint.complaint_number }}</h1>
+            {{ complaint.status|status_badge }}
+            {{ complaint.priority|priority_badge }}
+            {% if complaint.is_escalated %}
+            <span class="civic-pill bg-red-600 text-white animate-pulse">🚨 Tier {{ complaint.escalation_level }} Escalation</span>
+            {% endif %}
+        </div>
+        <h2 style="font-size: 1.25rem; color: #334155; font-weight: 600;">{{ complaint.title }}</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">
+            Submitted by <strong>{{ complaint.citizen.get_full_name|default:complaint.citizen.username }}</strong> &bull;
+            {{ complaint.created_at|date:"F d, Y \a\t H:i" }} &bull;
+            Ward: <strong>{{ complaint.ward.name }}</strong>
+        </p>
+    </div>
+
+    <!-- Top Action Bar -->
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        {% if user.is_manager %}
+        <a href="{% url 'assignments:assign' complaint.complaint_number %}" class="btn btn-primary btn-sm">
+            👥 Assign / Reassign Staff
+        </a>
+        <a href="{% url 'escalations:trigger' complaint.complaint_number %}" class="btn btn-danger btn-sm">
+            🚨 Escalate Docket
+        </a>
+        {% endif %}
+
+        {% if user.is_citizen and complaint.citizen_id == user.id %}
+            {% if complaint.status == 'RESOLVED' or complaint.status == 'CITIZEN_VERIFICATION' %}
+            <a href="{% url 'feedback:submit' complaint.complaint_number %}" class="btn btn-success btn-sm">
+                ⭐ Verify & Review Resolution
+            </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Grid Layout: Left Dossier / Right Timeline & SLA -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <!-- LEFT COLUMN: Dossier Details & Workflows -->
+    <div>
+        <!-- Summary Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Docket Information</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Jurisdiction: {{ complaint.department.name }}</span>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; font-size: 0.875rem;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Category & Subcategory</div>
+                        <strong>{{ complaint.category.name }}</strong> &rarr; {{ complaint.subcategory.name|default:"General" }}
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Assigned Field Officer</div>
+                        {% if complaint.assigned_staff %}
+                            <strong>{{ complaint.assigned_staff.get_full_name|default:complaint.assigned_staff.username }}</strong>
+                            <small style="color: var(--text-muted);">({{ complaint.assigned_staff.designation|default:"Technician" }})</small>
+                        {% else %}
+                            <span style="color: #b45309; font-weight: 600;">⚠️ Unassigned</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Civic Location</div>
+                        <strong>{{ complaint.ward.name }}</strong>, {{ complaint.area.name|default:"" }}
+                        <div style="color: #475569;">{{ complaint.specific_address }}</div>
+                        {% if complaint.landmark %}<small style="color: var(--text-muted);">Landmark: {{ complaint.landmark }}</small>{% endif %}
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Severity & Citizen Urgency</div>
+                        <span>{{ complaint.get_severity_display }}</span> &bull; <span>{{ complaint.get_priority_display }}</span>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Problem Description</div>
+                    <p style="white-space: pre-line; font-size: 0.9rem; color: #1e293b;">{{ complaint.description }}</p>
+                </div>
+
+                {% if complaint.resolution_summary %}
+                <div style="margin-top: 1rem; padding: 1rem; background-color: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 0.25rem;">
+                    <strong style="color: #166534; font-size: 0.85rem;">Official Resolution Summary:</strong>
+                    <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #14532d;">{{ complaint.resolution_summary }}</p>
+                    <small style="color: #15803d;">Resolved on {{ complaint.resolved_at|date:"M d, Y \a\t H:i" }}</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Permitted Workflow Transitions Form -->
+        {% if possible_transitions %}
+        <div class="content-card" style="border: 2px solid #93c5fd;">
+            <div class="card-header" style="background-color: #eff6ff;">
+                <h3 class="card-title" style="color: #1e40af;">⚡ Lifecycle State Action</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'workflow:transition' complaint.complaint_number %}">
+                    {% csrf_token %}
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; align-items: start;">
+                        <div class="form-group">
+                            <label class="form-label">Next Permitted State *</label>
+                            <select name="target_status" class="form-select" required>
+                                {% for target in possible_transitions %}
+                                    <option value="{{ target }}">{{ target|title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Operational Remarks / Action Justification</label>
+                            <input type="text" name="notes" class="form-input" placeholder="e.g. Completed road patch, awaiting asphalt curing...">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        Execute State Transition
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Evidence Gallery -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Evidence & Photographs Gallery ({{ attachments.count }})</h3>
+                <!-- Upload form trigger -->
+                <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('upload-box').style.display='block';">
+                    + Add Evidence
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Inline Upload Form -->
+                <div id="upload-box" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: 0.375rem;">
+                    <form method="post" action="{% url 'attachments:upload' complaint.complaint_number %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label">Select File (JPG, PNG, PDF max 10MB)</label>
+                            <input type="file" name="file" class="form-file" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Caption</label>
+                                <input type="text" name="caption" class="form-input" placeholder="e.g. Repaired street lamp">
+                            </div>
+                            {% if not user.is_citizen %}
+                            <div class="form-group">
+                                <label class="form-label">Stage</label>
+                                <select name="stage" class="form-select">
+                                    <option value="BEFORE_WORK">Before Work Inspection</option>
+                                    <option value="DURING_WORK">Work In Progress Evidence</option>
+                                    <option value="AFTER_RESOLUTION">Post-Resolution Proof</option>
+                                    <option value="OFFICIAL_REPORT">Official Technical Report</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if not user.is_citizen %}
+                        <div class="form-group">
+                            <label><input type="checkbox" name="is_internal_only"> Internal Staff File Only (Hide from citizen)</label>
+                        </div>
+                        {% endif %}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="submit" class="btn btn-primary btn-sm">Upload Evidence</button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('upload-box').style.display='none';">Close</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Gallery Items -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+                    {% for att in attachments %}
+                    <div style="border: 1px solid var(--border-color); border-radius: 0.375rem; overflow: hidden; background: white; text-align: center;">
+                        {% if att.is_image %}
+                        <a href="{% url 'attachments:view' att.pk %}" target="_blank">
+                            <div style="height: 120px; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <span style="font-size: 2.5rem;">📷</span>
+                            </div>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'attachments:view' att.pk %}" target="_blank">
+                            <div style="height: 120px; background-color: #f8fafc; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-size: 2.5rem;">📄</span>
+                            </div>
+                        </a>
+                        {% endif %}
+                        <div style="padding: 0.5rem; font-size: 0.75rem;">
+                            <span class="civic-pill bg-slate-200 text-slate-800" style="margin-bottom: 0.25rem;">{{ att.get_stage_display }}</span>
+                            <div style="font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ att.caption|default:att.file.name }}</div>
+                            <small style="color: var(--text-muted);">{{ att.created_at|date:"M d, H:i" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">No evidence files or photos uploaded yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Citizen Feedback & Rating if Closed/Verified -->
+        {% if feedback %}
+        <div class="content-card" style="border: 1px solid #10b981;">
+            <div class="card-header" style="background-color: #ecfdf5;">
+                <h3 class="card-title" style="color: #065f46;">Citizen Satisfaction Feedback</h3>
+                <span>
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= feedback.rating %}⭐{% else %}☆{% endif %}
+                    {% endfor %}
+                    ({{ feedback.rating }}/5)
+                </span>
+            </div>
+            <div class="card-body">
+                <p style="font-size: 0.9rem; color: #1e293b;">"{{ feedback.comments }}"</p>
+                <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                    Resolution Accepted: <strong>{% if feedback.resolution_accepted %}Yes (Satisfactory){% else %}No (Unsatisfactory){% endif %}</strong> &bull;
+                    Submitted {{ feedback.created_at|date:"M d, Y" }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Timeline Communications & Messages -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Communication Timeline</h3>
+            </div>
+            <div class="card-body">
+                <!-- Timeline list -->
+                <div class="timeline" style="margin-bottom: 1.5rem;">
+                    {% for msg in timeline_messages %}
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="{% if msg.is_internal_only %}background-color: #f59e0b; border-color: #f59e0b;{% endif %}"></div>
+                        <div style="background-color: {% if msg.is_internal_only %}#fffbeb{% else %}#ffffff{% endif %}; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.75rem 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.25rem;">
+                                <strong>{{ msg.sender.get_full_name|default:msg.sender.username }}</strong>
+                                <span style="color: var(--text-muted);">{{ msg.created_at|date:"M d, H:i" }}</span>
+                            </div>
+                            <span class="civic-pill {% if msg.is_internal_only %}bg-amber-100 text-amber-800{% else %}bg-blue-100 text-blue-800{% endif %}" style="margin-bottom: 0.25rem;">
+                                {{ msg.get_message_type_display }}
+                            </span>
+                            <p style="font-size: 0.875rem; margin-top: 0.25rem;">{{ msg.message }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">No timeline messages recorded.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Post new message form -->
+                <form method="post" action="{% url 'communications:post' complaint.complaint_number %}" style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Post Timeline Message or Query</label>
+                        <textarea name="message" rows="2" class="form-input" placeholder="Type message to citizen or department..." required></textarea>
+                    </div>
+                    {% if not user.is_citizen %}
+                    <div class="form-group">
+                        <label><input type="checkbox" name="is_internal_only"> Internal Departmental Note (Hidden from citizen)</label>
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary btn-sm">Post to Docket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: SLA Metrics & Audit Transitions -->
+    <div>
+        <!-- SLA Tracker Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">SLA Compliance</h3>
+                {% if complaint.sla_record %}
+                    {{ complaint.sla_record.status|sla_badge }}
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if complaint.sla_record %}
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                        <span>SLA Timeline Elapsed</span>
+                        <span>{{ complaint.sla_record.percentage_elapsed }}%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {{ complaint.sla_record.percentage_elapsed }}%; background-color: {% if complaint.sla_record.status == 'BREACHED' %}#dc2626{% elif complaint.sla_record.status == 'DUE_SOON' %}#d97706{% else %}#059669{% endif %};"></div>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="color: var(--text-muted);">Target SLA Policy:</span>
+                        <strong>{{ complaint.sla_record.policy.name|default:"Standard Benchmark" }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="color: var(--text-muted);">Resolution Deadline:</span>
+                        <strong>{{ complaint.sla_record.deadline|date:"M d, Y H:i" }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.4rem 0;">
+                        <span style="color: var(--text-muted);">Remaining Time:</span>
+                        <strong>{{ complaint.sla_record.remaining_seconds|time_duration }}</strong>
+                    </div>
+                </div>
+                {% else %}
+                <p style="color: var(--text-muted); font-size: 0.85rem;">SLA tracking docket active.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Workflow Transitions History -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Audit State History</h3>
+            </div>
+            <div class="card-body" style="padding: 1rem;">
+                {% for t in transitions %}
+                <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong>{{ t.from_status }} &rarr; {{ t.to_status }}</strong>
+                        <span style="color: var(--text-muted);">{{ t.created_at|date:"M d, H:i" }}</span>
+                    </div>
+                    <div style="color: #475569;">By: {{ t.actor.get_full_name|default:t.actor.username|default:"System Engine" }}</div>
+                    {% if t.notes %}<p style="color: var(--text-muted); font-style: italic; margin-top: 0.2rem;">"{{ t.notes }}"</p>{% endif %}
+                </div>
+                {% empty %}
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Initial docket creation.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

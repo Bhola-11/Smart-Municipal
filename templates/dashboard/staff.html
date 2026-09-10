@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 1.6rem;">Field Operations Workspace</h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Officer: <strong>{{ user.get_full_name|default:user.username }}</strong> | {{ user.department.name }}</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_assigned }}</div>
+            <div class="stat-label">Assigned Orders</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">🛠️</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ in_progress }}</div>
+            <div class="stat-label">Work in Progress</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f0fdf4; color: #16a34a;">🚧</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ investigation }}</div>
+            <div class="stat-label">Investigating</div>
+        </div>
+        <div class="stat-icon" style="background-color: #faf5ff; color: #9333ea;">🔎</div>
+    </div>
+    <div class="stat-card" style="{% if overdue > 0 %}border-color: #fca5a5;{% endif %}">
+        <div>
+            <div class="stat-val" style="{% if overdue > 0 %}color: #dc2626;{% endif %}">{{ overdue }}</div>
+            <div class="stat-label">SLA Overdue</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fee2e2; color: #dc2626;">⏰</div>
+    </div>
+</div>
+
+<!-- Pending Assignments Waiting for Officer Acceptance -->
+{% if pending_assignments %}
+<div class="content-card" style="border: 2px solid #f59e0b;">
+    <div class="card-header" style="background-color: #fffbeb;">
+        <h2 class="card-title" style="color: #92400e;">⚠️ Work Orders Awaiting Your Acceptance</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Docket #</th>
+                    <th>Issue Summary</th>
+                    <th>Priority</th>
+                    <th>Delegated By</th>
+                    <th>Assigned Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in pending_assignments %}
+                <tr>
+                    <td><strong><a href="{{ a.complaint.get_absolute_url }}">{{ a.complaint.complaint_number }}</a></strong></td>
+                    <td>{{ a.complaint.title }}</td>
+                    <td>{{ a.complaint.priority|priority_badge }}</td>
+                    <td>{{ a.assigned_by.get_full_name|default:a.assigned_by.username }}</td>
+                    <td>{{ a.created_at|date:"M d, H:i" }}</td>
+                    <td>
+                        <a href="{% url 'assignments:accept' a.pk %}" class="btn btn-success btn-sm">Accept Assignment</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Assigned Complaints Execution Queue -->
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">My Active Field Execution Queue</h2>
+        <a href="{% url 'complaints:list' %}" class="btn btn-outline btn-sm">All Department Complaints</a>
+    </div>
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Docket #</th>
+                    <th>Title & Location</th>
+                    <th>Priority</th>
+                    <th>Current Status</th>
+                    <th>SLA Target</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in assigned_complaints %}
+                <tr>
+                    <td><strong><a href="{{ c.get_absolute_url }}">{{ c.complaint_number }}</a></strong></td>
+                    <td>
+                        <div style="font-weight: 600;">{{ c.title }}</div>
+                        <small style="color: var(--text-muted);">{{ c.specific_address }} ({{ c.ward.name }})</small>
+                    </td>
+                    <td>{{ c.priority|priority_badge }}</td>
+                    <td>{{ c.status|status_badge }}</td>
+                    <td>
+                        {% if c.expected_resolution_date %}
+                            <div>{{ c.expected_resolution_date|date:"M d, H:i" }}</div>
+                            {% if c.is_overdue %}
+                                <span class="civic-badge bg-rose-100 text-rose-800">Breached</span>
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ c.get_absolute_url }}" class="btn btn-primary btn-sm">Manage & Resolve</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No work orders currently assigned to your queue.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

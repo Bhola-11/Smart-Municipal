@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 1.5rem auto;">
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Assign Field Officer &bull; {{ complaint.complaint_number }}</h2>
+            <a href="{{ complaint.get_absolute_url }}" class="btn btn-outline btn-sm">Cancel</a>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div style="margin-bottom: 1.5rem; background-color: #f8fafc; padding: 1rem; border-radius: 0.375rem;">
+                    <strong>{{ complaint.title }}</strong>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        Department: <strong>{{ complaint.department.name }}</strong> &bull; Ward: <strong>{{ complaint.ward.name }}</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Municipal Staff Officer *</label>
+                    <select name="staff_id" class="form-select" required>
+                        <option value="">-- Choose Field Personnel --</option>
+                        {% for item in workload %}
+                        <option value="{{ item.staff.id }}">
+                            {{ item.staff.get_full_name|default:item.staff.username }} - (Active Workload: {{ item.active_count }} complaints)
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-help">Current active workload counts are displayed to balance field distribution.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Instructions / Assignment Directives</label>
+                    <textarea name="reason" rows="3" class="form-input" placeholder="Provide technical instructions, expected materials, or priority guidelines..."></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <a href="{{ complaint.get_absolute_url }}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Dispatch Work Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

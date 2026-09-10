@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">{{ department.name }} ({{ department.code }})</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Official Municipal Agency Dossier</p>
+    </div>
+    {% if user.is_admin_user %}
+    <a href="{% url 'departments:edit' department.pk %}" class="btn btn-outline">Edit Department</a>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <div>
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Agency Complaints</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="civic-table">
+                    <thead>
+                        <tr>
+                            <th>Docket #</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Assigned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in recent_complaints %}
+                        <tr>
+                            <td><strong><a href="{{ c.get_absolute_url }}">{{ c.complaint_number }}</a></strong></td>
+                            <td>{{ c.title|truncatechars:35 }}</td>
+                            <td>{{ c.status|status_badge }}</td>
+                            <td>{{ c.priority|priority_badge }}</td>
+                            <td>{{ c.assigned_staff.get_full_name|default:"Unassigned" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                                No recent complaints recorded.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Agency Details</h3>
+            </div>
+            <div class="card-body" style="font-size: 0.85rem;">
+                <div style="margin-bottom: 0.75rem;">
+                    <span style="color: var(--text-muted); display: block;">Head Officer:</span>
+                    <strong>{{ department.head_officer.get_full_name|default:"Vacant" }}</strong>
+                </div>
+                <div style="margin-bottom: 0.75rem;">
+                    <span style="color: var(--text-muted); display: block;">Helpdesk Email:</span>
+                    <strong>{{ department.email|default:"Not specified" }}</strong>
+                </div>
+                <div style="margin-bottom: 0.75rem;">
+                    <span style="color: var(--text-muted); display: block;">Contact Hotline:</span>
+                    <strong>{{ department.phone|default:"Not specified" }}</strong>
+                </div>
+                <div style="margin-bottom: 0.75rem;">
+                    <span style="color: var(--text-muted); display: block;">Office Address:</span>
+                    <strong>{{ department.office_location|default:"Municipal Civic Center" }}</strong>
+                </div>
+                <div style="margin-bottom: 0.75rem;">
+                    <span style="color: var(--text-muted); display: block;">Standard SLA Target:</span>
+                    <strong>{{ department.default_sla_hours }} hours</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

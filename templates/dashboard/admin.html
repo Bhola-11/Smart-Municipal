@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 1.6rem;">Municipal System Administration</h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Global municipal configuration, user directories, and audit logging</p>
+</div>
+
+<!-- Admin Stat Cards -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">👥</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_citizens }}</div>
+            <div class="stat-label">Registered Citizens</div>
+        </div>
+        <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">🏡</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_staff }}</div>
+            <div class="stat-label">Municipal Personnel</div>
+        </div>
+        <div class="stat-icon" style="background-color: #faf5ff; color: #9333ea;">👔</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_departments }}</div>
+            <div class="stat-label">Departments</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fffbeb; color: #d97706;">🏢</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total_wards }}</div>
+            <div class="stat-label">Jurisdiction Wards</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f0fdfa; color: #0d9488;">🗺️</div>
+    </div>
+</div>
+
+<!-- Quick Administration Panels -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div class="content-card" style="padding: 1.25rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">🏢 Departments & Agencies</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Configure municipal agencies, head officers, and mandates.</p>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{% url 'departments:list' %}" class="btn btn-outline btn-sm">View Departments</a>
+            <a href="{% url 'departments:create' %}" class="btn btn-primary btn-sm">+ New Dept</a>
+        </div>
+    </div>
+
+    <div class="content-card" style="padding: 1.25rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">🗺️ Geographic Wards & Areas</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Manage municipal zones, ward boundaries, and postal areas.</p>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{% url 'wards:list' %}" class="btn btn-outline btn-sm">Wards Directory</a>
+            <a href="{% url 'wards:create' %}" class="btn btn-primary btn-sm">+ New Ward</a>
+        </div>
+    </div>
+
+    <div class="content-card" style="padding: 1.25rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">⏱️ SLA Policy Framework</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Define resolution benchmarks by category, priority, and dept.</p>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{% url 'sla:list' %}" class="btn btn-outline btn-sm">Manage Policies</a>
+            <a href="{% url 'sla:create' %}" class="btn btn-primary btn-sm">+ Create Policy</a>
+        </div>
+    </div>
+
+    <div class="content-card" style="padding: 1.25rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">👥 Municipal Personnel</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Onboard staff, assign roles, and configure credentials.</p>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{% url 'accounts:staff_list' %}" class="btn btn-outline btn-sm">Staff Directory</a>
+            <a href="{% url 'accounts:staff_create' %}" class="btn btn-primary btn-sm">+ Onboard Staff</a>
+        </div>
+    </div>
+</div>
+
+<!-- Security Audit Log Preview -->
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">🔒 Recent Security & Operational Audit Log</h2>
+        <a href="{% url 'audit:list' %}" class="btn btn-outline btn-sm">Complete Audit Ledger</a>
+    </div>
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Actor</th>
+                    <th>Action</th>
+                    <th>Target</th>
+                    <th>Details</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_audit_logs %}
+                <tr>
+                    <td><small>{{ log.created_at|date:"Y-m-d H:i:s" }}</small></td>
+                    <td><strong>{{ log.actor.username|default:"SYSTEM" }}</strong></td>
+                    <td><span class="civic-badge bg-blue-100 text-blue-800">{{ log.action }}</span></td>
+                    <td><code>{{ log.target_model }}:{{ log.target_id }}</code></td>
+                    <td>{{ log.details|truncatechars:45 }}</td>
+                    <td><small>{{ log.ip_address|default:"127.0.0.1" }}</small></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                        Audit log empty.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 4rem auto; text-align: center;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">404 - Docket Not Found</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ message|default:"The requested complaint reference, docket record, or page could not be located in our municipal registry." }}</p>
+    <div style="display: flex; justify-content: center; gap: 1rem;">
+        <a href="{% url 'dashboard:index' %}" class="btn btn-primary">Dashboard Home</a>
+        <a href="{% url 'complaints:track' %}" class="btn btn-outline">Track by Reference Number</a>
+    </div>
+</div>
+{% endblock %}

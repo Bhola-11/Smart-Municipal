@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+    <h1 style="font-size: 1.6rem;">Field Officer Workload Distribution</h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Real-time task delegation monitoring to ensure operational balance across departments</p>
+</div>
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Field Officer</th>
+                    <th>Department</th>
+                    <th>Jurisdiction</th>
+                    <th>Active Complaints Assigned</th>
+                    <th>Workload Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in workload %}
+                <tr>
+                    <td>
+                        <strong>{{ item.staff.get_full_name|default:item.staff.username }}</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">{{ item.staff.designation }}</div>
+                    </td>
+                    <td>{{ item.department }}</td>
+                    <td>{{ item.staff.ward.name|default:"City-Wide" }}</td>
+                    <td>
+                        <strong style="font-size: 1.1rem;">{{ item.active_count }}</strong>
+                    </td>
+                    <td>
+                        {% if item.active_count == 0 %}
+                            <span class="civic-badge bg-emerald-100 text-emerald-800">Available / Clear</span>
+                        {% elif item.active_count <= 3 %}
+                            <span class="civic-badge bg-blue-100 text-blue-800">Normal Workload</span>
+                        {% elif item.active_count <= 6 %}
+                            <span class="civic-badge bg-amber-100 text-amber-800">Near Capacity</span>
+                        {% else %}
+                            <span class="civic-badge bg-rose-100 text-rose-800">Overloaded</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        No field officers found in this department.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

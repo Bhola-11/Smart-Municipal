@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Municipal Departments & Agencies</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Administrative divisions handling city public infrastructure</p>
+    </div>
+    {% if user.is_admin_user %}
+    <a href="{% url 'departments:create' %}" class="btn btn-primary">
+        + Add Department
+    </a>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+    {% for d in departments %}
+    <div class="content-card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">{{ d.name }}</h3>
+                <code style="color: var(--accent-blue);">{{ d.code }}</code>
+            </div>
+            <a href="{% url 'departments:detail' d.pk %}" class="btn btn-outline btn-sm">Overview</a>
+        </div>
+        <div class="card-body">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; min-height: 40px;">
+                {{ d.description|truncatewords:15 }}
+            </p>
+            <div style="font-size: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+                <div>Head Officer: <strong>{{ d.head_officer.get_full_name|default:d.head_officer.username|default:"Vacant" }}</strong></div>
+                <div>Standard SLA: <strong>{{ d.default_sla_hours }} hours</strong></div>
+                <div>Field Personnel: <strong>{{ d.total_staff_count }} officers</strong></div>
+                <div>Active Grievances: <strong>{{ d.active_complaint_count }} dockets</strong></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

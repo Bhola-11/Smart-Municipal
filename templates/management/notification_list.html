@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Civic Notifications & Alerts</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Real-time notifications regarding your complaints and work orders</p>
+    </div>
+    {% if notifications %}
+    <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-outline btn-sm">Mark All as Read</a>
+    {% endif %}
+</div>
+
+<div class="content-card">
+    <div class="card-body" style="padding: 0.5rem 1.5rem;">
+        {% for n in notifications %}
+        <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; {% if not n.is_read %}background-color: #f8fafc; margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;{% endif %}">
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    {% if not n.is_read %}<span style="color: #2563eb; font-size: 1.2rem;">&bull;</span>{% endif %}
+                    <strong style="font-size: 0.95rem;">{{ n.title }}</strong>
+                    <span class="civic-pill {% if n.priority == 'URGENT' %}bg-red-600 text-white{% elif n.priority == 'HIGH' %}bg-amber-500 text-white{% else %}bg-slate-200 text-slate-800{% endif %}">
+                        {{ n.notification_type }}
+                    </span>
+                </div>
+                <p style="font-size: 0.875rem; color: #334155; margin-top: 0.25rem;">{{ n.message }}</p>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    {{ n.created_at|timesince }} ago ({{ n.created_at|date:"M d, H:i" }})
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                {% if n.related_complaint %}
+                <a href="{% url 'notifications:mark_read' n.pk %}" class="btn btn-outline btn-sm">View Docket</a>
+                {% elif not n.is_read %}
+                <a href="{% url 'notifications:mark_read' n.pk %}" class="btn btn-outline btn-sm">Dismiss</a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+            No notifications found in your inbox.
+        </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+    <h1 style="font-size: 1.6rem;">🔒 Municipal Audit Trail & Security Ledger</h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Immutable event log of security actions, status transitions, and data mutations</p>
+</div>
+
+<!-- Audit Filter Form -->
+<div class="content-card" style="margin-bottom: 1.5rem;">
+    <div class="card-body" style="padding: 1rem;">
+        <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <input type="text" name="action" class="form-input" placeholder="Filter by Action Code (e.g. STATUS_TRANSITION)" value="{{ request.GET.action }}" style="flex: 1; min-width: 200px;">
+            <input type="text" name="model" class="form-input" placeholder="Filter by Model (e.g. Complaint)" value="{{ request.GET.model }}" style="flex: 1; min-width: 200px;">
+            <input type="text" name="q" class="form-input" placeholder="Search details payload..." value="{{ request.GET.q }}" style="flex: 2; min-width: 200px;">
+            <button type="submit" class="btn btn-primary">Filter Logs</button>
+            <a href="{% url 'audit:list' %}" class="btn btn-outline">Reset</a>
+        </form>
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Timestamp (UTC)</th>
+                    <th>Actor</th>
+                    <th>Action Code</th>
+                    <th>Target Record</th>
+                    <th>Details & Payload</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in page_obj %}
+                <tr>
+                    <td><small style="font-family: monospace;">{{ log.created_at|date:"Y-m-d H:i:s" }}</small></td>
+                    <td><strong>{{ log.actor.username|default:"SYSTEM ENGINE" }}</strong></td>
+                    <td><span class="civic-badge bg-blue-100 text-blue-800">{{ log.action }}</span></td>
+                    <td><code>{{ log.target_model }}:{{ log.target_id }}</code></td>
+                    <td><small>{{ log.details }}</small></td>
+                    <td><small>{{ log.ip_address|default:"127.0.0.1" }}</small></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        No audit records matched query.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); font-size: 0.85rem;">
+        <div>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+        <div style="display: flex; gap: 0.5rem;">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline btn-sm">&laquo; Prev</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline btn-sm">Next &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

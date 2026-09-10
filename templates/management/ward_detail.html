@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Ward {{ ward.ward_number }}: {{ ward.name }}</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Zone: <strong>{{ ward.zone.name }}</strong></p>
+    </div>
+    <a href="{% url 'wards:list' %}" class="btn btn-outline">Back to Wards</a>
+</div>
+
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title">Neighborhood Localities & Postal Codes</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="civic-table">
+            <thead>
+                <tr>
+                    <th>Locality / Area</th>
+                    <th>Postal Code</th>
+                    <th>Landmark</th>
+                    <th>GPS Coordinates</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in ward.areas.all %}
+                <tr>
+                    <td><strong>{{ a.name }}</strong></td>
+                    <td><code>{{ a.postal_code }}</code></td>
+                    <td>{{ a.landmark|default:"-" }}</td>
+                    <td>
+                        {% if a.latitude and a.longitude %}
+                        <small>{{ a.latitude }}, {{ a.longitude }}</small>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                        No areas mapped to this ward yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

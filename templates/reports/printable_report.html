@@ -1,0 +1,117 @@
+{% load civic_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Grievance Audit &bull; {{ MUNICIPALITY_NAME }}</title>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; color: #111; padding: 2rem; line-height: 1.4; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .title { font-size: 1.6rem; font-weight: bold; text-transform: uppercase; margin-bottom: 0.25rem; }
+        .subtitle { font-size: 1rem; color: #444; }
+        .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .meta-table td { padding: 0.4rem; border: 1px solid #ccc; }
+        .section-title { font-size: 1.15rem; font-weight: bold; border-bottom: 1px solid #000; margin: 1.5rem 0 0.5rem; text-transform: uppercase; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 1.5rem; }
+        .data-table th, .data-table td { border: 1px solid #777; padding: 0.4rem 0.6rem; text-align: left; }
+        .data-table th { background-color: #f0f0f0; }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="margin-bottom: 1.5rem; text-align: right;">
+        <button onclick="window.print();" style="padding: 0.5rem 1rem; font-weight: bold; cursor: pointer;">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <div class="header">
+        <div class="title">{{ MUNICIPALITY_NAME }}</div>
+        <div class="subtitle">Executive Public Grievance Redressal & SLA Performance Audit</div>
+        <div style="font-size: 0.85rem; margin-top: 0.5rem;">Official Certified Extract &bull; Municipal Governance Directorate</div>
+    </div>
+
+    <table class="meta-table">
+        <tr>
+            <td><strong>Audit Compilation Date:</strong> {% now "F d, Y H:i" %} UTC</td>
+            <td><strong>Total Complaints Audited:</strong> {{ metrics.total }}</td>
+        </tr>
+        <tr>
+            <td><strong>Redressal Efficiency:</strong> {{ metrics.resolution_rate }}%</td>
+            <td><strong>SLA Compliance Standard:</strong> {{ metrics.sla_compliance_rate }}%</td>
+        </tr>
+        <tr>
+            <td><strong>Average Resolution Velocity:</strong> {{ metrics.avg_resolution_hours }} Hours</td>
+            <td><strong>High-Tier Escalations:</strong> {{ metrics.escalated }}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">I. Departmental Operational Efficiency</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Department Name</th>
+                <th>Total Volume</th>
+                <th>Resolved Dockets</th>
+                <th>Overdue</th>
+                <th>Resolution Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in dept_performance %}
+            <tr>
+                <td>{{ d.department.code }}</td>
+                <td>{{ d.department.name }}</td>
+                <td>{{ d.total }}</td>
+                <td>{{ d.resolved }}</td>
+                <td>{{ d.overdue }}</td>
+                <td>{{ d.resolution_rate }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="section-title">II. High-Priority Escalated Dockets Under Executive Review</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Docket #</th>
+                <th>Subject</th>
+                <th>Department</th>
+                <th>Tier</th>
+                <th>Ward</th>
+                <th>Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in urgent_complaints %}
+            <tr>
+                <td>{{ c.complaint_number }}</td>
+                <td>{{ c.title }}</td>
+                <td>{{ c.department.code }}</td>
+                <td>Tier {{ c.escalation_level }}</td>
+                <td>Ward {{ c.ward.ward_number }}</td>
+                <td>{{ c.created_at|date:"Y-m-d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Zero escalated dockets reported.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 3rem; display: flex; justify-content: space-between; font-size: 0.9rem;">
+        <div>
+            __________________________<br>
+            Director of Public Redressal
+        </div>
+        <div>
+            __________________________<br>
+            Municipal Commissioner
+        </div>
+    </div>
+</body>
+</html>

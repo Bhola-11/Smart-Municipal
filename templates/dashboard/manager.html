@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Department Management Console</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Department: <strong>{{ department.name|default:"Metropolis Central Governance" }}</strong> | 
+            Manager: <strong>{{ user.get_full_name|default:user.username }}</strong>
+        </p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{% url 'assignments:workload' %}" class="btn btn-outline">⚖️ Workload Distribution</a>
+        <a href="{% url 'reports:center' %}" class="btn btn-primary">📑 Export Department Audit</a>
+    </div>
+</div>
+
+<!-- Manager KPI Grid -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total }}</div>
+            <div class="stat-label">Total Dockets</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">📊</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ open_count }}</div>
+            <div class="stat-label">Pending Action</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fef3c7; color: #d97706;">⏳</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #059669;">{{ resolution_rate }}%</div>
+            <div class="stat-label">Resolution Rate</div>
+        </div>
+        <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">📈</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val" style="color: #dc2626;">{{ overdue_count }}</div>
+            <div class="stat-label">SLA Breaches</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fee2e2; color: #dc2626;">🚨</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <!-- Unassigned Complaints Requiring Delegation -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">⚠️ Unassigned Grievances</h2>
+            <a href="{% url 'complaints:list' %}" class="btn btn-outline btn-sm">Full Registry</a>
+        </div>
+        <div class="table-responsive">
+            <table class="civic-table">
+                <thead>
+                    <tr>
+                        <th>Docket #</th>
+                        <th>Subject</th>
+                        <th>Ward</th>
+                        <th>Priority</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in unassigned_complaints %}
+                    <tr>
+                        <td><strong><a href="{{ c.get_absolute_url }}">{{ c.complaint_number }}</a></strong></td>
+                        <td>{{ c.title|truncatechars:28 }}</td>
+                        <td>{{ c.ward.name }}</td>
+                        <td>{{ c.priority|priority_badge }}</td>
+                        <td>
+                            <a href="{{ c.get_absolute_url }}" class="btn btn-primary btn-sm">Assign Staff</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                            All complaints in this department are currently delegated.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Active Escalations -->
+    <div class="content-card" style="border-top: 3px solid #dc2626;">
+        <div class="card-header">
+            <h2 class="card-title" style="color: #b91c1c;">🚨 High-Priority Escalations</h2>
+            <a href="{% url 'escalations:list' %}" class="btn btn-outline btn-sm">All Escalations</a>
+        </div>
+        <div class="table-responsive">
+            <table class="civic-table">
+                <thead>
+                    <tr>
+                        <th>Docket #</th>
+                        <th>Issue</th>
+                        <th>Tier</th>
+                        <th>Assigned Staff</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in escalated_complaints %}
+                    <tr>
+                        <td><strong><a href="{{ c.get_absolute_url }}">{{ c.complaint_number }}</a></strong></td>
+                        <td>{{ c.title|truncatechars:25 }}</td>
+                        <td><span class="civic-pill bg-red-600 text-white">Tier {{ c.escalation_level }}</span></td>
+                        <td>{{ c.assigned_staff.get_full_name|default:"Unassigned" }}</td>
+                        <td>
+                            <a href="{{ c.get_absolute_url }}" class="btn btn-danger btn-sm">Intervene</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                            Zero active escalations in this department queue.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+"""Wards app initialization."""

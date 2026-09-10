@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 550px; margin: 2rem auto;">
+    <div class="content-card">
+        <div class="card-header" style="flex-direction: column; text-align: center; justify-content: center; padding: 1.5rem 1.5rem 0.5rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✍️</div>
+            <h2 class="card-title" style="font-size: 1.25rem;">Citizen Registration Portal</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Register to file and track municipal grievances</p>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'accounts:register' %}">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="civic-alert civic-alert-error" style="font-size: 0.8rem;">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">First Name *</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}<div class="form-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name *</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}<div class="form-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Username / Citizen ID *</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="form-error">{{ form.username.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="form-error">{{ form.email.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mobile Phone Number *</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}<div class="form-error">{{ form.phone_number.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Primary Ward (Locality)</label>
+                    {{ form.ward }}
+                    {% if form.ward.errors %}<div class="form-error">{{ form.ward.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Residential Address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}<div class="form-error">{{ form.address.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <input type="password" name="password1" class="form-input" placeholder="Password (min 8 chars)" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password *</label>
+                        <input type="password" name="password2" class="form-input" placeholder="Repeat Password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center; padding: 0.75rem; margin-top: 1rem;">
+                    Create Citizen Account
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+                Already hold a municipal citizen account? <a href="{% url 'accounts:login' %}" style="font-weight: 600;">Sign In</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

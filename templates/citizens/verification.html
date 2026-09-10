@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 1.5rem auto;">
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Resident Identity Verification</h2>
+        </div>
+        <div class="card-body">
+            <div style="margin-bottom: 1.5rem;">
+                <p style="font-size: 0.9rem; color: var(--text-muted);">
+                    Verified residents receive expedited priority review and official municipal notifications.
+                </p>
+                <div style="margin-top: 0.5rem;">
+                    Status: 
+                    {% if verification.status == 'VERIFIED' %}
+                    <span class="civic-badge bg-emerald-100 text-emerald-800">Verified Citizen</span>
+                    {% elif verification.status == 'PENDING' %}
+                    <span class="civic-badge bg-amber-100 text-amber-800">Pending Review</span>
+                    {% elif verification.status == 'REJECTED' %}
+                    <span class="civic-badge bg-rose-100 text-rose-800">Verification Rejected</span>
+                    {% else %}
+                    <span class="civic-badge bg-gray-100 text-gray-800">Unverified</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Document Proof Type *</label>
+                    <select name="document_type" class="form-select" required>
+                        <option value="NATIONAL_ID">National Identity Card / Aadhaar / SSN</option>
+                        <option value="PASSPORT">Passport</option>
+                        <option value="DRIVERS_LICENSE">Driving License</option>
+                        <option value="UTILITY_BILL">Municipal Electricity / Water Utility Bill</option>
+                        <option value="PROPERTY_TAX">Property Tax Assessment Receipt</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Document Identifier Number *</label>
+                    <input type="text" name="document_number" class="form-input" value="{{ verification.document_number|default:'' }}" placeholder="e.g. DL-98302198" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Scanned Document / Photo Proof *</label>
+                    <input type="file" name="document_file" class="form-file" accept="image/*,.pdf" required>
+                    <div class="form-help">Max 10 MB. Encrypted and securely retained for municipal records.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                    Submit Verification Credentials
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

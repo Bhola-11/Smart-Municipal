@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 780px; margin: 1rem auto;">
+    <div class="content-card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Register Civic Grievance</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    Submit municipal issue details for investigation, routing, and resolution
+                </p>
+            </div>
+            <a href="{% url 'complaints:list' %}" class="btn btn-outline btn-sm">Cancel</a>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="civic-alert civic-alert-error">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="form-label">Grievance Title *</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}<div class="form-error">{{ form.title.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}<div class="form-error">{{ form.category.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subcategory</label>
+                        {{ form.subcategory }}
+                        <div class="form-help">Auto-populates based on category</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Citizen Urgency / Priority *</label>
+                        {{ form.priority }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Severity Level *</label>
+                        {{ form.severity }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Ward Jurisdiction *</label>
+                        {{ form.ward }}
+                        {% if form.ward.errors %}<div class="form-error">{{ form.ward.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Specific Area / Locality</label>
+                        {{ form.area }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Detailed Address & Street *</label>
+                    {{ form.specific_address }}
+                    {% if form.specific_address.errors %}<div class="form-error">{{ form.specific_address.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Recognizable Landmark</label>
+                    {{ form.landmark }}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Comprehensive Issue Description *</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}<div class="form-error">{{ form.description.errors.0 }}</div>{% endif %}
+                </div>
+
+                <!-- Evidence Upload -->
+                <div style="background-color: #f8fafc; border: 1px dashed var(--border-color); padding: 1.25rem; border-radius: 0.375rem; margin-bottom: 1.5rem;">
+                    <label class="form-label">Initial Evidence Photograph / File</label>
+                    {{ form.initial_evidence }}
+                    <div style="margin-top: 0.75rem;">
+                        {{ form.evidence_caption }}
+                    </div>
+                    <div class="form-help">Accepted formats: JPG, PNG, PDF (Max 10 MB).</div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <a href="{% url 'dashboard:index' %}" class="btn btn-outline">Discard</a>
+                    <button type="submit" class="btn btn-primary">
+                        Submit Complaint & Generate Tracking Docket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

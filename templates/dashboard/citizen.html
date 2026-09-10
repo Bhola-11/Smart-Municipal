@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load civic_tags %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-size: 1.6rem;">Citizen Dashboard</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Track your filed civic issues, updates, and municipal responses</p>
+    </div>
+    <a href="{% url 'complaints:create' %}" class="btn btn-primary">
+        <span>✍️</span> Report New Civic Issue
+    </a>
+</div>
+
+<!-- Stat Cards -->
+<div class="card-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ total }}</div>
+            <div class="stat-label">Total Filed</div>
+        </div>
+        <div class="stat-icon" style="background-color: #eff6ff; color: #2563eb;">📝</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ active }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fef3c7; color: #d97706;">⏳</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ resolved }}</div>
+            <div class="stat-label">Awaiting Verification</div>
+        </div>
+        <div class="stat-icon" style="background-color: #ecfdf5; color: #059669;">✅</div>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-val">{{ closed }}</div>
+            <div class="stat-label">Completed & Closed</div>
+        </div>
+        <div class="stat-icon" style="background-color: #f1f5f9; color: #475569;">📁</div>
+    </div>
+    {% if escalated > 0 %}
+    <div class="stat-card" style="border-color: #fca5a5;">
+        <div>
+            <div class="stat-val" style="color: #dc2626;">{{ escalated }}</div>
+            <div class="stat-label">Escalated Dockets</div>
+        </div>
+        <div class="stat-icon" style="background-color: #fee2e2; color: #dc2626;">🚨</div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Main Section: Complaints & Notifications -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <!-- Recent Complaints Table -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">My Recent Complaints</h2>
+            <a href="{% url 'complaints:list' %}" class="btn btn-outline btn-sm">View Full History</a>
+        </div>
+        <div class="table-responsive">
+            <table class="civic-table">
+                <thead>
+                    <tr>
+                        <th>Docket #</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>SLA Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in recent_complaints %}
+                    <tr>
+                        <td><strong><a href="{{ c.get_absolute_url }}">{{ c.complaint_number }}</a></strong></td>
+                        <td>
+                            <div>{{ c.title|truncatechars:35 }}</div>
+                            <small style="color: var(--text-muted);">{{ c.ward.name }}</small>
+                        </td>
+                        <td>{{ c.category.name }}</td>
+                        <td>{{ c.status|status_badge }}</td>
+                        <td>
+                            {% if c.expected_resolution_date %}
+                                <div style="font-size: 0.8rem;">{{ c.expected_resolution_date|date:"M d, H:i" }}</div>
+                                {% if c.is_overdue %}<span class="civic-badge bg-rose-100 text-rose-800">Overdue</span>{% endif %}
+                            {% else %}
+                                <span style="color: var(--text-muted);">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ c.get_absolute_url }}" class="btn btn-outline btn-sm">Dossier</a>
+                            {% if c.status == 'RESOLVED' or c.status == 'CITIZEN_VERIFICATION' %}
+                            <a href="{% url 'feedback:submit' c.complaint_number %}" class="btn btn-success btn-sm">Verify</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                            You have not registered any civic complaints yet.<br><br>
+                            <a href="{% url 'complaints:create' %}" class="btn btn-primary btn-sm">Report Your First Issue</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Alerts & Notifications -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Recent Alerts</h2>
+            <a href="{% url 'notifications:list' %}" class="btn btn-outline btn-sm">All</a>
+        </div>
+        <div class="card-body" style="padding: 1rem;">
+            {% for n in recent_notifications %}
+            <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+                <div style="font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between;">
+                    <span>{{ n.title }}</span>
+                    <small style="color: var(--text-muted);">{{ n.created_at|timesince }} ago</small>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">{{ n.message|truncatechars:80 }}</p>
+                {% if n.related_complaint %}
+                <a href="{{ n.related_complaint.get_absolute_url }}" style="font-size: 0.75rem;">View Docket &rarr;</a>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1.5rem 0;">
+                No unread alerts. You are up to date!
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
