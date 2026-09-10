@@ -52,3 +52,4 @@ All pull requests and features:
 - [PR #48](.github/pull_requests/PR_048.md): feat(escalations): build trigger_escalation multi-tier service
 - [PR #49](.github/pull_requests/PR_049.md): feat(escalations): implement resolve_escalation management action
 - [PR #50](.github/pull_requests/PR_050.md): feat(escalations): build escalations queue view and manual trigger modal
+- [PR #51](.github/pull_requests/PR_051.md): feat(attachments): define AttachmentStage choices and Attachment model
