@@ -58,3 +58,4 @@ All pull requests and features:
 - [PR #54](.github/pull_requests/PR_054.md): feat(communications): define MessageType and ComplaintMessage model
 - [PR #55](.github/pull_requests/PR_055.md): feat(communications): implement post_message_view with internal notes
 - [PR #56](.github/pull_requests/PR_056.md): feat(feedback): define SatisfactionLevel choices and Feedback model
+- [PR #57](.github/pull_requests/PR_057.md): feat(feedback): implement submit_feedback_view with auto-close logic
