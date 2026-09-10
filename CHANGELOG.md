@@ -61,3 +61,4 @@ All pull requests and features:
 - [PR #57](.github/pull_requests/PR_057.md): feat(feedback): implement submit_feedback_view with auto-close logic
 - [PR #58](.github/pull_requests/PR_058.md): feat(feedback): add citizen rejection handling and auto-reopening trigger
 - [PR #59](.github/pull_requests/PR_059.md): feat(feedback): add multi-reopen escalation trigger logic
+- [PR #60](.github/pull_requests/PR_060.md): feat(feedback): build CSAT management analytics dashboard
