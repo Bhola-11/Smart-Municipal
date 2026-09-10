@@ -101,3 +101,4 @@ All pull requests and features:
 - [PR #97](.github/pull_requests/PR_097.md): feat(ui): build department and ward directory templates
 - [PR #98](.github/pull_requests/PR_098.md): feat(ui): build SLA policy configuration templates
 - [PR #99](.github/pull_requests/PR_099.md): feat(ui): build print-ready certified executive audit template
+- [PR #100](.github/pull_requests/PR_100.md): feat(admin): register all domain models into Django administrative site
